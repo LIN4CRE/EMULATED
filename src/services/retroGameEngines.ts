@@ -104,7 +104,54 @@ export function createInitialState(gameId: string): GameEngineState {
       { id: 1, x: 400, y: 330, hp: 10, maxHp: 10, type: 'badnik_crab', vx: -1, vy: 0, anim: 0 },
       { id: 2, x: 750, y: 330, hp: 10, maxHp: 10, type: 'badnik_wasp', vx: 0, vy: 1, anim: 0 }
     ];
-  } else if (gameId === 'neo-invaders-arcade') {
+  } else if (gameId.includes('psx') || gameId.includes('castlevania')) {
+    base.playerX = 300;
+    base.playerY = 240;
+    base.boss = { active: true, name: "Dracula / Void Lord", hp: 600, maxHp: 600, x: 480, y: 220, phase: 1 };
+    base.enemies = [
+      { id: 1, x: 200, y: 150, hp: 40, maxHp: 40, type: 'shadow_goblin', vx: 1, vy: 0, anim: 0 },
+      { id: 2, x: 450, y: 320, hp: 60, maxHp: 60, type: 'dark_stalker', vx: -1, vy: 0, anim: 0 }
+    ];
+  } else if (gameId.includes('n64') || gameId.includes('mario64') || gameId.includes('zelda')) {
+    base.playerX = 320;
+    base.playerY = 280;
+    base.customData = { barrelRoll: 0, speed: 1.5, bombs: 3, ringCount: 0 };
+    base.boss = { active: true, name: "Ultra 64 Titan Boss", hp: 800, maxHp: 800, x: 320, y: 120, phase: 1 };
+  } else if (gameId.includes('snes') || gameId.includes('mario-world') || gameId.includes('chrono-trigger')) {
+    base.playerX = 320;
+    base.playerY = 360;
+    base.customData = { speed: 0, maxSpeed: 14, angle: 0, lap: 1, maxLaps: 3, item: 'Mushroom Boost', lapTime: 0, bestLap: 74.2 };
+    base.enemies = [
+      { id: 1, x: 280, y: 320, hp: 100, maxHp: 100, type: 'rival_kart_red', vx: 0, vy: 0, anim: 0 },
+      { id: 2, x: 360, y: 300, hp: 100, maxHp: 100, type: 'rival_kart_blue', vx: 0, vy: 0, anim: 0 }
+    ];
+  } else if (gameId.includes('gba') || gameId.includes('metroid') || gameId.includes('pokemon')) {
+    base.playerX = 320;
+    base.playerY = 240;
+    base.customData = {
+      inBattle: false,
+      myMonster: { name: 'AetherZard', level: 25, hp: 92, maxHp: 92, exp: 45, maxExp: 100, type: 'Fire / Dragon' },
+      enemyMonster: { name: 'Wild Zephyros', level: 24, hp: 85, maxHp: 85, type: 'Electric / Flying' },
+      battleMenuIndex: 0,
+      battleMessage: 'Ready for action!'
+    };
+  } else if (gameId.includes('genesis') || gameId.includes('sonic') || gameId.includes('streets')) {
+    base.playerX = 100;
+    base.playerY = 320;
+    base.customData = { rings: 24, speed: 0, isRolling: false, cameraOffset: 0 };
+    base.enemies = [
+      { id: 1, x: 400, y: 330, hp: 10, maxHp: 10, type: 'badnik_crab', vx: -1, vy: 0, anim: 0 },
+      { id: 2, x: 750, y: 330, hp: 10, maxHp: 10, type: 'badnik_wasp', vx: 0, vy: 1, anim: 0 }
+    ];
+  } else if (gameId.includes('nes') || gameId.includes('mega-man')) {
+    base.playerX = 80;
+    base.playerY = 320;
+    base.customData = { ninjutsuPoints: 40, onGround: true, facingRight: true };
+    base.enemies = [
+      { id: 1, x: 300, y: 320, hp: 20, maxHp: 20, type: 'evil_samurai', vx: -1.5, vy: 0, anim: 0 },
+      { id: 2, x: 500, y: 320, hp: 30, maxHp: 30, type: 'armored_demon', vx: -1, vy: 0, anim: 0 }
+    ];
+  } else {
     base.playerX = 320;
     base.playerY = 420;
     base.customData = { wave: 1, ufoTimer: 300, bunkers: [120, 240, 380, 500] };

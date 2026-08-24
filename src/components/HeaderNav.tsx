@@ -15,6 +15,7 @@ interface HeaderNavProps {
   onOpenAnalytics: () => void;
   onOpenRemapper: () => void;
   onOpenImporter: () => void;
+  onOpenBIOSManager: () => void;
   onOpenAuth: () => void;
   userProfile: UserProfile;
   isPlayingGame?: boolean;
@@ -30,6 +31,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   onOpenAnalytics,
   onOpenRemapper,
   onOpenImporter,
+  onOpenBIOSManager,
   onOpenAuth,
   userProfile,
   isPlayingGame = false
@@ -88,13 +90,22 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         </div>
 
         {/* Center: Status Indicators & Shader Selector */}
-        <div className="hidden lg:flex items-center gap-3">
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-400 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700">
+        <div className="hidden lg:flex items-center gap-2.5">
+          <button
+            onClick={onOpenBIOSManager}
+            title="Pre-Installed System BIOS Status & Cores"
+            className="flex items-center gap-1.5 text-xs font-medium text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/40 px-3 py-1.5 rounded-full border border-emerald-500/40 transition-colors shadow-sm cursor-pointer"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>BIOS: 7 Cores Pre-installed</span>
+          </button>
+
+          <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700">
             <Shield className="w-3.5 h-3.5 text-indigo-400" />
             <span>Cloud Save Active</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-400 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700">
+          <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700">
             <Activity className="w-3.5 h-3.5 text-emerald-400" />
             <span>18ms Latency</span>
           </div>

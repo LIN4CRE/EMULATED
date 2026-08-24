@@ -12,6 +12,7 @@ import { PerformanceAnalyticsModal } from './components/PerformanceAnalyticsModa
 import { SocialShareModal } from './components/SocialShareModal';
 import { AuthModal } from './components/AuthModal';
 import { ROMImporterModal } from './components/ROMImporterModal';
+import { BIOSManagerModal } from './components/BIOSManagerModal';
 import { cloudSyncService } from './services/cloudSyncService';
 import { ArrowLeft, Sparkles, Trophy, Users, Sliders, Activity, Share2 } from 'lucide-react';
 
@@ -25,7 +26,7 @@ export default function App() {
   const [userProfile, setUserProfile] = useState<UserProfile>({
     id: 'usr_retro_master_99',
     name: 'AetherGamer_X',
-    email: 'retro.gamer@aethercloud.net',
+    email: 'delinacre@gmail.com',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     level: 42,
     xp: 89450,
@@ -50,6 +51,7 @@ export default function App() {
   const [isSocialShareOpen, setIsSocialShareOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isImporterOpen, setIsImporterOpen] = useState(false);
+  const [isBIOSManagerOpen, setIsBIOSManagerOpen] = useState(false);
 
   // Initialize Cloud Sync & Local DB
   useEffect(() => {
@@ -58,8 +60,15 @@ export default function App() {
 
   // Handle Game Selection
   const handleSelectGame = (game: GameMetadata) => {
+    // If game is not in library, add it
+    setGames(prev => prev.some(g => g.id === game.id) ? prev : [game, ...prev]);
     setActiveGame(game);
     setActiveTab('playing');
+  };
+
+  // 1-Click Add Game to Library
+  const handleAddGameToLibrary = (newGame: GameMetadata) => {
+    setGames(prev => (prev.some(g => g.id === newGame.id) ? prev : [newGame, ...prev]));
   };
 
   // Toggle Favorite
@@ -104,6 +113,7 @@ export default function App() {
         onOpenAnalytics={() => setIsAnalyticsOpen(true)}
         onOpenRemapper={() => setIsRemapperOpen(true)}
         onOpenImporter={() => setIsImporterOpen(true)}
+        onOpenBIOSManager={() => setIsBIOSManagerOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         userProfile={userProfile}
         isPlayingGame={activeGame !== null}
@@ -112,13 +122,15 @@ export default function App() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6">
         {activeTab === 'library' ? (
-          /* Library Browser View */
+          /* Library Browser View with 2-Section Search & Vault Downloads */
           <GameCatalogView
             games={games}
             onSelectGame={handleSelectGame}
             onToggleFavorite={handleToggleFavorite}
             onOpenImporter={() => setIsImporterOpen(true)}
             onOpenAIGuide={handleOpenAIGuideForGame}
+            onOpenBIOSManager={() => setIsBIOSManagerOpen(true)}
+            onAddGameToLibrary={handleAddGameToLibrary}
           />
         ) : (
           /* Active Playing Emulator View */
@@ -246,6 +258,11 @@ export default function App() {
         isOpen={isImporterOpen}
         onClose={() => setIsImporterOpen(false)}
         onImportSuccess={handleImportSuccess}
+      />
+
+      <BIOSManagerModal
+        isOpen={isBIOSManagerOpen}
+        onClose={() => setIsBIOSManagerOpen(false)}
       />
     </div>
   );

@@ -276,17 +276,17 @@ export const EmulatorScreen: React.FC<EmulatorScreenProps> = ({
             // Normal Tick (Or Turbo 2x/4x)
             const iterations = isFastForward ? 2 : 1;
             for (let i = 0; i < iterations; i++) {
-              if (game.id === 'chrono-blade-psx') {
+              if (game.id === 'chrono-blade-psx' || game.console === 'PSX') {
                 tickChronoBladePSX(ctx, gameStateRef.current, combinedInput, w, h);
-              } else if (game.id === 'star-striker-n64') {
+              } else if (game.id === 'star-striker-n64' || game.console === 'N64') {
                 tickStarStrikerN64(ctx, gameStateRef.current, combinedInput, w, h);
-              } else if (game.id === 'super-retro-kart') {
+              } else if (game.id === 'super-retro-kart' || game.console === 'SNES') {
                 tickSuperRetroKartGP(ctx, gameStateRef.current, combinedInput, w, h);
-              } else if (game.id === 'cyber-ninjas-nes') {
+              } else if (game.id === 'cyber-ninjas-nes' || game.console === 'NES') {
                 tickShadowNinjaGaidenNES(ctx, gameStateRef.current, combinedInput, w, h);
-              } else if (game.id === 'emerald-monsters-gba') {
+              } else if (game.id === 'emerald-monsters-gba' || game.console === 'GBA') {
                 tickEmeraldMonstersGBA(ctx, gameStateRef.current, combinedInput, w, h);
-              } else if (game.id === 'sonic-surge-genesis') {
+              } else if (game.id === 'sonic-surge-genesis' || game.console === 'GENESIS') {
                 tickSonicCyberSurgeGenesis(ctx, gameStateRef.current, combinedInput, w, h);
               } else {
                 tickNeoSpaceInvadersArcade(ctx, gameStateRef.current, combinedInput, w, h);
