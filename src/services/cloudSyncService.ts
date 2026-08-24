@@ -144,6 +144,34 @@ class CloudSyncService {
     );
   }
 
+  public async saveCustomRom(gameId: string, romData: ArrayBuffer, fileName: string): Promise<void> {
+    const db = await this.initDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('customRoms', 'readwrite');
+      const store = tx.objectStore('customRoms');
+      const req = store.put({
+        id: gameId,
+        fileName,
+        data: romData,
+        size: romData.byteLength,
+        uploadedAt: Date.now()
+      });
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  public async getCustomRom(gameId: string): Promise<{ fileName: string; data: ArrayBuffer; size: number } | null> {
+    const db = await this.initDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction('customRoms', 'readonly');
+      const store = tx.objectStore('customRoms');
+      const req = store.get(gameId);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  }
+
   public getCurrentDeviceName(): string {
     const ua = navigator.userAgent;
     if (/iPad|Android(?!.*Mobile)|Tablet/i.test(ua)) return 'Tablet';
@@ -152,11 +180,11 @@ class CloudSyncService {
     return 'Desktop PC (Web Console)';
   }
 
-  public getMockUserProfile(): UserProfile {
+  public getInitialUserProfile(email: string = 'delinacre@gmail.com'): UserProfile {
     return {
       id: this.currentUserId,
-      name: 'Alex Vance',
-      email: 'alex.vance@retrocloud.gg',
+      name: 'AetherGamer_X',
+      email: email,
       gamerTag: 'RetroArchon_X',
       avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=200&auto=format&fit=crop&q=80',
       level: 42,
