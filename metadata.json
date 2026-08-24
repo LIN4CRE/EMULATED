@@ -1,0 +1,6 @@
+{
+  "name": "AetherCloud Retro Emulator & Gaming Hub",
+  "description": "Next-generation cloud retro gaming console with instant ROM emulation (GBA, PSX, N64, SNES, NES, Arcade), cross-device cloud saves, real-time multiplayer co-op, voice chat, spectator streaming, controller mapping, CRT shaders, and performance analytics.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
