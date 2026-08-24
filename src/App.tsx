@@ -13,7 +13,9 @@ import { SocialShareModal } from './components/SocialShareModal';
 import { AuthModal } from './components/AuthModal';
 import { ROMImporterModal } from './components/ROMImporterModal';
 import { BIOSManagerModal } from './components/BIOSManagerModal';
+import { AutoGameInstaller } from './components/AutoGameInstaller';
 import { cloudSyncService } from './services/cloudSyncService';
+import { installService } from './services/installService';
 import { ArrowLeft, Sparkles, Trophy, Users, Sliders, Activity, Share2 } from 'lucide-react';
 
 export default function App() {
@@ -21,6 +23,8 @@ export default function App() {
   const [activeGame, setActiveGame] = useState<GameMetadata | null>(DEFAULT_GAMES_CATALOG[0]);
   const [activeTab, setActiveTab] = useState<'library' | 'playing'>('library');
   const [shaderFilter, setShaderFilter] = useState<ShaderFilter>('curved-crt');
+  const [isInstallingGame, setIsInstallingGame] = useState<boolean>(false);
+  const [isReinstallMode, setIsReinstallMode] = useState<boolean>(false);
 
   // User Profile
   const [userProfile, setUserProfile] = useState<UserProfile>({
@@ -63,7 +67,25 @@ export default function App() {
     // If game is not in library, add it
     setGames(prev => prev.some(g => g.id === game.id) ? prev : [game, ...prev]);
     setActiveGame(game);
+
+    // Check if this is the 1st load of this game
+    const isInstalled = installService.isGameInstalled(game.id);
+    if (!isInstalled) {
+      setIsInstallingGame(true);
+      setIsReinstallMode(false);
+    } else {
+      setIsInstallingGame(false);
+    }
+
     setActiveTab('playing');
+  };
+
+  // Re-run automated installation / hardware diagnostic
+  const handleReinstallGame = () => {
+    if (activeGame) {
+      setIsInstallingGame(true);
+      setIsReinstallMode(true);
+    }
   };
 
   // 1-Click Add Game to Library
@@ -176,17 +198,29 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Master 60FPS Retro Emulator Screen */}
-              <EmulatorScreen
-                game={activeGame}
-                shaderFilter={shaderFilter}
-                onOpenAICompanion={() => handleOpenAIGuideForGame(activeGame)}
-                onOpenMultiplayer={() => setIsMultiplayerOpen(true)}
-                onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
-                onOpenRemapper={() => setIsRemapperOpen(true)}
-                onOpenAnalytics={() => setIsAnalyticsOpen(true)}
-                onOpenSocialShare={() => setIsSocialShareOpen(true)}
-              />
+              {/* Automated 1st-Load Installation Screen OR Active 60FPS Retro Emulator */}
+              {isInstallingGame ? (
+                <AutoGameInstaller
+                  game={activeGame}
+                  isReinstall={isReinstallMode}
+                  onInstallComplete={() => {
+                    setIsInstallingGame(false);
+                    setIsReinstallMode(false);
+                  }}
+                />
+              ) : (
+                <EmulatorScreen
+                  game={activeGame}
+                  shaderFilter={shaderFilter}
+                  onOpenAICompanion={() => handleOpenAIGuideForGame(activeGame)}
+                  onOpenMultiplayer={() => setIsMultiplayerOpen(true)}
+                  onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+                  onOpenRemapper={() => setIsRemapperOpen(true)}
+                  onOpenAnalytics={() => setIsAnalyticsOpen(true)}
+                  onOpenSocialShare={() => setIsSocialShareOpen(true)}
+                  onReinstallGame={handleReinstallGame}
+                />
+              )}
             </div>
           )
         )}

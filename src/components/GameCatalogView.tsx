@@ -8,6 +8,7 @@ import {
 import { GameMetadata } from '../types';
 import { ONLINE_RETRO_VAULT, VaultGameItem } from '../data/onlineVaultGames';
 import { PREINSTALLED_SYSTEM_BIOS } from '../data/biosConfig';
+import { installService } from '../services/installService';
 
 interface GameCatalogViewProps {
   games: GameMetadata[];
@@ -452,9 +453,13 @@ export const GameCatalogView: React.FC<GameCatalogViewProps> = ({
                         <span className="flex items-center gap-1 font-mono text-slate-300">
                           <Users className="w-3 h-3 text-indigo-400" /> {game.playersCount}P
                         </span>
-                        {game.hasCloudSave && (
-                          <span title="Cloud Save Ready" className="text-purple-400">
-                            <Cloud className="w-3 h-3" />
+                        {installService.isGameInstalled(game.id) ? (
+                          <span title="Pre-installed & Verified Hardware Core" className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                            <ShieldCheck className="w-2.5 h-2.5" /> Installed
+                          </span>
+                        ) : (
+                          <span title="Automated Install sequence on 1st launch" className="flex items-center gap-1 text-[10px] text-indigo-300 font-mono bg-indigo-950/40 px-1.5 py-0.5 rounded border border-indigo-500/20">
+                            <Zap className="w-2.5 h-2.5 text-indigo-400" /> Auto-Install
                           </span>
                         )}
                       </div>
@@ -496,6 +501,15 @@ export const GameCatalogView: React.FC<GameCatalogViewProps> = ({
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                           {game.console}
                         </span>
+                        {installService.isGameInstalled(game.id) ? (
+                          <span className="hidden sm:flex items-center gap-1 text-[10px] text-emerald-400 font-mono bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                            <ShieldCheck className="w-2.5 h-2.5" /> Installed
+                          </span>
+                        ) : (
+                          <span className="hidden sm:flex items-center gap-1 text-[10px] text-indigo-300 font-mono bg-indigo-950/40 px-1.5 py-0.5 rounded border border-indigo-500/20">
+                            <Zap className="w-2.5 h-2.5 text-indigo-400" /> Auto-Install
+                          </span>
+                        )}
                       </div>
                       <span className="text-xs text-slate-400">{game.genre} • {game.year} • {game.publisher}</span>
                     </div>

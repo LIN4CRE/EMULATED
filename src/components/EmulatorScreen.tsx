@@ -2,12 +2,14 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { 
   Maximize2, Minimize2, Play, Pause, Save, FolderOpen, 
   RotateCcw, FastForward, Volume2, VolumeX, Sparkles, 
-  Tv, Monitor, Smartphone, Camera, Users, Trophy, MessageSquareText, Sliders
+  Tv, Monitor, Smartphone, Camera, Users, Trophy, MessageSquareText, Sliders,
+  ShieldCheck, RefreshCw
 } from 'lucide-react';
 import { GameMetadata, ShaderFilter, SaveStateSlot } from '../types';
 import { audioEngine } from '../services/audioEngine';
 import { gamepadService } from '../services/gamepadService';
 import { cloudSyncService } from '../services/cloudSyncService';
+import { installService } from '../services/installService';
 import { 
   GameEngineState, 
   createInitialState, 
@@ -30,6 +32,7 @@ interface EmulatorScreenProps {
   onOpenRemapper: () => void;
   onOpenAnalytics: () => void;
   onOpenSocialShare: () => void;
+  onReinstallGame?: () => void;
   isTouchDevice?: boolean;
 }
 
@@ -42,6 +45,7 @@ export const EmulatorScreen: React.FC<EmulatorScreenProps> = ({
   onOpenRemapper,
   onOpenAnalytics,
   onOpenSocialShare,
+  onReinstallGame,
   isTouchDevice = false
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -363,7 +367,20 @@ export const EmulatorScreen: React.FC<EmulatorScreenProps> = ({
               {fps} FPS
             </span>
             <span>•</span>
-            <span>60Hz V-Sync</span>
+            {onReinstallGame ? (
+              <button
+                onClick={onReinstallGame}
+                title="System Core Auto-Installed & Verified • Click to Re-run Hardware Initialization Sequence"
+                className="flex items-center gap-1 text-[11px] text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-500/30 px-2 py-0.5 rounded-full transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                <span>Installed & Verified</span>
+              </button>
+            ) : (
+              <span className="flex items-center gap-1 text-emerald-400">
+                <ShieldCheck className="w-3 h-3" /> Installed
+              </span>
+            )}
           </div>
         </div>
 
